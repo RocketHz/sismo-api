@@ -1,9 +1,11 @@
 class EarthquakesController < ApplicationController
   def index
     @earthquakes = Earthquake.all
-    @earthquakes = @earthquakes.where(mag_type: params[:mag_type]) if params[:mag_type].present?
+      if params[:mag_type].present?
+        @earthquakes = @earthquakes.where(mag_type: params[:mag_type].split(','))
+      end
     @earthquakes = @earthquakes.paginate(page: params[:page], per_page: params[:per_page] || 10)
-   
+
     response = {
        data: @earthquakes.map do |earthquake|
          {
